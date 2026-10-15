@@ -10,49 +10,51 @@
       <template #header><span>SPU 基本信息</span></template>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" size="default">
         <el-form-item label="SPU编码" prop="spuCode">
-          <el-input v-model="form.spuCode" placeholder="SPU编码将作为图片存储目录名" />
+          <el-input v-model="form.spuCode" placeholder="SPU编码将作为图片存储目录名"/>
         </el-form-item>
         <el-form-item label="商品名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入商品名称" />
+          <el-input v-model="form.name" placeholder="请输入商品名称"/>
         </el-form-item>
         <el-form-item label="分类" prop="categoryId">
           <el-tree-select
-            v-model="form.categoryId"
-            :data="categoryTree"
-            :props="{ label: 'name', value: 'categoryId', children: 'children' }"
-            placeholder="请选择分类"
-            check-strictly
-            clearable
-            filterable
-            style="width:100%"
+              v-model="form.categoryId"
+              :data="categoryTree"
+              :props="{ label: 'name', value: 'categoryId', children: 'children' }"
+              placeholder="请选择分类"
+              check-strictly
+              clearable
+              filterable
+              style="width:100%"
           />
         </el-form-item>
         <el-form-item label="品牌" prop="brandId">
           <div style="display:flex;gap:8px;width:100%;">
-            <el-input :model-value="brandName" placeholder="请选择品牌" readonly />
+            <el-input :model-value="brandName" placeholder="请选择品牌" readonly/>
             <el-button @click="brandDialogVisible = true">选择品牌</el-button>
           </div>
         </el-form-item>
         <el-form-item label="描述" prop="description">
-          <el-input v-model="form.description" type="textarea" :rows="3" />
+          <el-input v-model="form.description" type="textarea" :rows="3"/>
         </el-form-item>
 
         <!-- 主图 -->
         <el-form-item label="主图" prop="mainImage">
           <div class="upload-row">
             <el-upload
-              ref="mainUploadRef"
-              action="#"
-              :show-file-list="false"
-              :auto-upload="false"
-              :disabled="!form.spuCode"
-              :before-upload="beforeMainUpload"
-              :on-change="handleMainUpload"
-              accept="image/jpeg,image/png,image/gif,image/webp"
+                ref="mainUploadRef"
+                action="#"
+                :show-file-list="false"
+                :auto-upload="false"
+                :disabled="!form.spuCode"
+                :before-upload="beforeMainUpload"
+                :on-change="handleMainUpload"
+                accept="image/jpeg,image/png,image/gif,image/webp"
             >
               <div v-loading="mainUploading" class="upload-trigger">
-                <img v-if="form.mainImage" :src="form.mainImage" class="preview-img" />
-                <el-icon v-else :size="28"><Plus /></el-icon>
+                <img v-if="form.mainImage" :src="form.mainImage" class="preview-img"/>
+                <el-icon v-else :size="28">
+                  <Plus/>
+                </el-icon>
               </div>
             </el-upload>
             <div class="upload-info">
@@ -71,34 +73,37 @@
         <el-form-item label="商品图册">
           <div class="upload-row" style="flex-direction: column; align-items: flex-start;">
             <el-upload
-              ref="galleryUploadRef"
-              action="#"
-              list-type="picture-card"
-              :auto-upload="false"
-              :multiple="true"
-              :disabled="!form.spuCode"
-              :file-list="galleryFileList"
-              :before-upload="beforeGalleryUpload"
-              :on-change="handleGalleryChange"
-              :on-remove="handleGalleryRemove"
-              accept="image/jpeg,image/png,image/gif,image/webp"
+                ref="galleryUploadRef"
+                action="#"
+                list-type="picture-card"
+                :auto-upload="false"
+                :multiple="true"
+                :disabled="!form.spuCode"
+                :file-list="galleryFileList"
+                :before-upload="beforeGalleryUpload"
+                :on-change="handleGalleryChange"
+                :on-remove="handleGalleryRemove"
+                accept="image/jpeg,image/png,image/gif,image/webp"
             >
-              <el-icon><Plus /></el-icon>
+              <el-icon>
+                <Plus/>
+              </el-icon>
             </el-upload>
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
               <el-button
-                size="small"
-                type="primary"
-                :loading="galleryUploading"
-                :disabled="galleryFileList.length === 0"
-                @click="uploadGalleryImages"
-              >上传图册图片</el-button>
+                  size="small"
+                  type="primary"
+                  :loading="galleryUploading"
+                  :disabled="galleryFileList.length === 0"
+                  @click="uploadGalleryImages"
+              >上传图册图片
+              </el-button>
               <span class="tip-text">可选，存入 /{{ form.spuCode || '...' }}/ 目录</span>
             </div>
             <!-- 已上传图册展示 -->
             <div v-if="form.images.length" class="gallery-preview">
               <div v-for="(url, i) in form.images" :key="i" class="gallery-item">
-                <img :src="url" />
+                <img :src="url"/>
                 <el-button size="small" circle type="danger" @click="form.images.splice(i, 1)">×</el-button>
               </div>
             </div>
@@ -120,22 +125,26 @@
     <!-- 品牌选择对话框 -->
     <el-dialog v-model="brandDialogVisible" title="选择品牌" width="500px" destroy-on-close>
       <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <el-input v-model="brandKeyword" placeholder="搜索品牌名称" clearable @keyup.enter="searchBrands" />
+        <el-input v-model="brandKeyword" placeholder="搜索品牌名称" clearable @keyup.enter="searchBrands"/>
         <el-button type="primary" @click="searchBrands">搜索</el-button>
       </div>
       <div
-        class="no-brand-option"
-        @click="selectNoBrand"
+          class="no-brand-option"
+          @click="selectNoBrand"
       >
-        <el-icon><Plus /></el-icon> 没有我要添加的品牌（不选择品牌）
+        <el-icon>
+          <Plus/>
+        </el-icon>
+        没有我要添加的品牌（不选择品牌）
       </div>
       <el-table :data="brandList" stripe v-loading="brandLoading" highlight-current-row @row-click="selectBrand">
-        <el-table-column prop="id" label="ID" width="60" />
-        <el-table-column prop="name" label="品牌名称" />
+        <el-table-column prop="id" label="ID" width="60"/>
+        <el-table-column prop="name" label="品牌名称"/>
       </el-table>
       <template #footer>
         <el-button @click="brandDialogVisible = false">取消</el-button>
       </template>
+    </el-dialog>
 
     <!-- SKU 管理（SPU创建后显示） -->
     <el-card v-if="createdSpuId" class="sku-card">
@@ -144,10 +153,10 @@
         <el-button size="small" type="primary" @click="skuDialogVisible = true">添加 SKU</el-button>
       </template>
       <el-table :data="skuList" border stripe>
-        <el-table-column prop="skuCode" label="SKU编码" width="140" />
-        <el-table-column prop="name" label="SKU名称" min-width="140" />
-        <el-table-column prop="price" label="价格" width="90" />
-        <el-table-column prop="stock" label="库存" width="70" />
+        <el-table-column prop="skuCode" label="SKU编码" width="140"/>
+        <el-table-column prop="name" label="SKU名称" min-width="140"/>
+        <el-table-column prop="price" label="价格" width="90"/>
+        <el-table-column prop="stock" label="库存" width="70"/>
         <el-table-column label="规格" min-width="160">
           <template #default="{ row }">
             <span v-if="!row.specifications || Object.keys(row.specifications).length === 0">—</span>
@@ -160,13 +169,14 @@
         </el-table-column>
         <el-table-column label="图片" width="80">
           <template #default="{ row }">
-            <el-image v-if="row.images?.[0]" :src="row.images[0]" style="width: 40px; height: 40px;" fit="cover" />
+            <el-image v-if="row.images?.[0]" :src="row.images[0]" style="width: 40px; height: 40px;" fit="cover"/>
             <span v-else>—</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="80" fixed="right">
           <template #default="{ row }">
-            <el-button size="small" type="danger" plain @click="skuList = skuList.filter(s => s !== row)">删除</el-button>
+            <el-button size="small" type="danger" plain @click="skuList = skuList.filter(s => s !== row)">删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -176,25 +186,25 @@
     <el-dialog v-model="skuDialogVisible" title="添加 SKU" width="560px" destroy-on-close>
       <el-form ref="skuFormRef" :model="skuForm" :rules="skuRules" label-width="100px">
         <el-form-item label="SKU编码" prop="skuCode">
-          <el-input v-model="skuForm.skuCode" placeholder="SKU编码将作为图片子目录" />
+          <el-input v-model="skuForm.skuCode" placeholder="SKU编码将作为图片子目录"/>
         </el-form-item>
         <el-row :gutter="16">
           <el-col :span="12">
             <el-form-item label="价格" prop="price">
-              <el-input-number v-model="skuForm.price" :min="0.01" :precision="2" style="width: 100%;" />
+              <el-input-number v-model="skuForm.price" :min="0.01" :precision="2" style="width: 100%;"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="库存" prop="stock">
-              <el-input-number v-model="skuForm.stock" :min="0" style="width: 100%;" />
+              <el-input-number v-model="skuForm.stock" :min="0" style="width: 100%;"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="规格">
           <div class="spec-list">
             <div v-for="(item, i) in skuForm.specs" :key="i" class="spec-row">
-              <el-input v-model="item.key" placeholder="规格名" size="small" style="width: 120px;" />
-              <el-input v-model="item.value" placeholder="规格值" size="small" style="width: 120px;" />
+              <el-input v-model="item.key" placeholder="规格名" size="small" style="width: 120px;"/>
+              <el-input v-model="item.value" placeholder="规格值" size="small" style="width: 120px;"/>
               <el-button size="small" type="danger" plain @click="skuForm.specs.splice(i, 1)">×</el-button>
             </div>
             <el-button size="small" @click="skuForm.specs.push({ key: '', value: '' })">+ 添加规格</el-button>
@@ -203,18 +213,20 @@
         <el-form-item label="SKU图片">
           <div class="upload-row">
             <el-upload
-              ref="skuUploadRef"
-              action="#"
-              :show-file-list="false"
-              :auto-upload="false"
-              :disabled="!skuForm.skuCode"
-              :before-upload="beforeSkuUpload"
-              :on-change="handleSkuUpload"
-              accept="image/jpeg,image/png,image/gif,image/webp"
+                ref="skuUploadRef"
+                action="#"
+                :show-file-list="false"
+                :auto-upload="false"
+                :disabled="!skuForm.skuCode"
+                :before-upload="beforeSkuUpload"
+                :on-change="handleSkuUpload"
+                accept="image/jpeg,image/png,image/gif,image/webp"
             >
               <div v-loading="skuUploading" class="upload-trigger" style="width: 100px; height: 100px;">
-                <img v-if="skuForm.mainImage" :src="skuForm.mainImage" class="preview-img" />
-                <el-icon v-else :size="24"><Plus /></el-icon>
+                <img v-if="skuForm.mainImage" :src="skuForm.mainImage" class="preview-img"/>
+                <el-icon v-else :size="24">
+                  <Plus/>
+                </el-icon>
               </div>
             </el-upload>
             <span class="tip-text" style="margin-left: 8px;">
@@ -232,14 +244,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { createSpu, createSku, getCategoryTree, getBrandList } from '@/api/admin'
-import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
-import { uploadToOSS, validateImageFile } from '@/utils/upload'
-import type { UploadInstance, UploadProps, UploadUserFile } from 'element-plus'
-import type { SkuCreateRequest, CategoryNode, BrandItem } from '@/types'
+import {onMounted, reactive, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {createSku, createSpu, getBrandList, getCategoryTree} from '@/api/admin'
+import type {UploadInstance, UploadProps, UploadUserFile} from 'element-plus'
+import {ElMessage} from 'element-plus'
+import {Plus} from '@element-plus/icons-vue'
+import {uploadToOSS, validateImageFile} from '@/utils/upload'
+import type {BrandItem, CategoryNode, SkuCreateRequest} from '@/types'
 
 const router = useRouter()
 const formRef = ref()
@@ -257,22 +269,25 @@ const form = reactive({
   description: '', mainImage: '', images: [] as string[], status: 1
 })
 const rules: Record<string, any> = {
-  spuCode: [{ required: true, message: '请输入SPU编码', trigger: 'blur' }],
-  name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-  categoryId: [{ required: true, message: '请选择分类', trigger: 'change' }],
-  mainImage: [{ required: true, message: '请上传主图', trigger: 'change' }]
+  spuCode: [{required: true, message: '请输入SPU编码', trigger: 'blur'}],
+  name: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
+  categoryId: [{required: true, message: '请选择分类', trigger: 'change'}],
+  mainImage: [{required: true, message: '请上传主图', trigger: 'change'}]
 }
 
 // ---- 分类树 ----
 const categoryTree = ref<CategoryNode[]>([])
 const loadingCategory = ref(false)
+
 async function loadCategoryTree() {
   loadingCategory.value = true
   try {
     const res = await getCategoryTree(0, 3)
     categoryTree.value = res.data || []
-  } catch { /* ignore */ }
-  finally { loadingCategory.value = false }
+  } catch { /* ignore */
+  } finally {
+    loadingCategory.value = false
+  }
 }
 
 // ---- 品牌选择 ----
@@ -287,13 +302,17 @@ async function searchBrands() {
   try {
     const res = await getBrandList(brandKeyword.value || undefined)
     brandList.value = res.data || []
-  } finally { brandLoading.value = false }
+  } finally {
+    brandLoading.value = false
+  }
 }
+
 function selectBrand(row: BrandItem) {
   form.brandId = row.id
   brandName.value = row.name
   brandDialogVisible.value = false
 }
+
 function selectNoBrand() {
   form.brandId = null
   brandName.value = ''
@@ -307,7 +326,10 @@ onMounted(() => {
 // ---- SPU 图片上传 ----
 const beforeMainUpload: UploadProps['beforeUpload'] = (file) => {
   const v = validateImageFile(file, 5)
-  if (!v.valid) { ElMessage.error(v.message); return false }
+  if (!v.valid) {
+    ElMessage.error(v.message);
+    return false
+  }
   return true
 }
 const handleMainUpload: UploadProps['onChange'] = async (uploadFile) => {
@@ -327,11 +349,18 @@ const handleMainUpload: UploadProps['onChange'] = async (uploadFile) => {
 
 const beforeGalleryUpload: UploadProps['beforeUpload'] = (file) => {
   const v = validateImageFile(file, 5)
-  if (!v.valid) { ElMessage.error(v.message); return false }
+  if (!v.valid) {
+    ElMessage.error(v.message);
+    return false
+  }
   return true
 }
-const handleGalleryChange: UploadProps['onChange'] = (_f, files) => { galleryFileList.value = files }
-const handleGalleryRemove: UploadProps['onRemove'] = (_f, files) => { galleryFileList.value = files }
+const handleGalleryChange: UploadProps['onChange'] = (_f, files) => {
+  galleryFileList.value = files
+}
+const handleGalleryRemove: UploadProps['onRemove'] = (_f, files) => {
+  galleryFileList.value = files
+}
 
 async function uploadGalleryImages() {
   if (galleryFileList.value.length === 0 || !form.spuCode) return
@@ -366,14 +395,17 @@ const skuForm = reactive({
   mainImage: ''
 })
 const skuRules = {
-  skuCode: [{ required: true, message: '请输入SKU编码', trigger: 'blur' }],
-  price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
-  stock: [{ required: true, message: '请输入库存', trigger: 'blur' }]
+  skuCode: [{required: true, message: '请输入SKU编码', trigger: 'blur'}],
+  price: [{required: true, message: '请输入价格', trigger: 'blur'}],
+  stock: [{required: true, message: '请输入库存', trigger: 'blur'}]
 }
 
 const beforeSkuUpload: UploadProps['beforeUpload'] = (file) => {
   const v = validateImageFile(file, 5)
-  if (!v.valid) { ElMessage.error(v.message); return false }
+  if (!v.valid) {
+    ElMessage.error(v.message);
+    return false
+  }
   return true
 }
 const handleSkuUpload: UploadProps['onChange'] = async (uploadFile) => {
@@ -397,7 +429,9 @@ async function saveSku() {
   skuSaving.value = true
   try {
     const specs: Record<string, string> = {}
-    skuForm.specs.forEach(s => { if (s.key) specs[s.key] = s.value })
+    skuForm.specs.forEach(s => {
+      if (s.key) specs[s.key] = s.value
+    })
 
     const payload: SkuCreateRequest = {
       spuId: createdSpuId.value,
@@ -410,12 +444,15 @@ async function saveSku() {
     }
 
     await createSku(payload)
-    skuList.value.push({ ...payload })
+    skuList.value.push({...payload})
     ElMessage.success('SKU创建成功')
 
     skuDialogVisible.value = false
-    skuForm.skuCode = ''; skuForm.price = 0.01; skuForm.stock = 0
-    skuForm.specs = []; skuForm.mainImage = ''
+    skuForm.skuCode = '';
+    skuForm.price = 0.01;
+    skuForm.stock = 0
+    skuForm.specs = [];
+    skuForm.mainImage = ''
   } catch {
     ElMessage.error('SKU创建失败')
   } finally {
@@ -448,8 +485,21 @@ async function handleSave() {
 </script>
 
 <style lang="scss" scoped>
-.page-container { display: flex; flex-direction: column; gap: 16px; }
-.page-header { display: flex; align-items: center; justify-content: space-between; h3 { color: $text-primary; } }
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    color: $text-primary;
+  }
+}
 
 .sku-card {
   :deep(.el-card__header) {
@@ -466,48 +516,103 @@ async function handleSave() {
 }
 
 .upload-trigger {
-  width: 120px; height: 120px;
+  width: 120px;
+  height: 120px;
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   transition: border-color 0.3s;
-  &:hover { border-color: var(--el-color-primary); }
-  .preview-img { width: 100%; height: 100%; object-fit: cover; }
+
+  &:hover {
+    border-color: var(--el-color-primary);
+  }
+
+  .preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .upload-info {
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   .url-text {
-    font-size: 12px; color: var(--el-text-color-secondary);
-    max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 12px;
+    color: var(--el-text-color-secondary);
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .tip-text { font-size: 12px; color: var(--el-text-color-secondary); }
+
+  .tip-text {
+    font-size: 12px;
+    color: var(--el-text-color-secondary);
+  }
 }
 
 .gallery-preview {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+
   .gallery-item {
-    position: relative; width: 80px; height: 80px; border-radius: 4px; overflow: hidden;
-    img { width: 100%; height: 100%; object-fit: cover; }
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .el-button {
-      position: absolute; top: -4px; right: -4px;
-      width: 20px; height: 20px; padding: 0;
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 20px;
+      height: 20px;
+      padding: 0;
     }
   }
 }
 
 .no-brand-option {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px; cursor: pointer; border-radius: 4px;
-  color: var(--el-color-primary); font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--el-color-primary);
+  font-size: 14px;
   transition: background 0.2s;
-  &:hover { background: var(--el-color-primary-light-9); }
+
+  &:hover {
+    background: var(--el-color-primary-light-9);
+  }
 }
 
 .spec-list {
-  display: flex; flex-direction: column; gap: 6px;
-  .spec-row { display: flex; align-items: center; gap: 6px; }
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .spec-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 }
 </style>

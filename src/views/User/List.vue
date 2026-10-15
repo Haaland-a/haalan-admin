@@ -88,6 +88,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { getUserList, updateUserStatus, adminRegister } from '@/api/admin'
+import { encryptPassword } from '@/utils/common'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 
@@ -117,7 +118,15 @@ async function handleRegister() {
   if (!valid) return
   registering.value = true
   try {
-    const res = await adminRegister(registerForm)
+    // 密码加密（与登录保持一致），不修改 registerForm 本身，避免重试时二次加密
+    const res = await adminRegister({
+      username: registerForm.username,
+      password: encryptPassword(registerForm.password),
+      confirmPassword: encryptPassword(registerForm.confirmPassword),
+      phone: registerForm.phone,
+      email: registerForm.email,
+      admin: registerForm.admin,
+    })
     if (res.code === 200) {
       ElMessage.success('创建成功')
       registerDialogVisible.value = false

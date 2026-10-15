@@ -140,6 +140,8 @@ export interface LoginResponse {
   userId: number
   username: string
   token: string
+  /** 是否管理员；由后端按 t_user.is_admin 下发 */
+  admin?: boolean
 }
 
 // Seckill Activity Products

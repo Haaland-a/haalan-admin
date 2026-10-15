@@ -53,7 +53,7 @@ export function getActivity(id: number) {
   return Request.get<SeckillActivity>(`/admin/seckill/activity/${id}`)
 }
 export function getActivityProducts(id: number) {
-  return Request.get<SeckillActivityDetail>(`/seckill/activity/${id}/products`)
+  return Request.get<SeckillActivityDetail>(`/admin/seckill/activity/${id}/detail`)
 }
 export function addActivityProduct(activityId: number, data: any) {
   return Request.post(`/admin/seckill/activity/${activityId}/product`, data)

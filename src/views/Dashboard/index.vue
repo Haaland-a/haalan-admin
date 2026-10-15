@@ -79,8 +79,8 @@ const statCards = ref<any[]>([])
 function updateStatCards() {
   statCards.value = [
     { label: '总用户数', value: overview.totalUsers, icon: User, color: '#4F46E5' },
-    { label: '总订单数', value: overview.totalOrders, icon: ShoppingCart, color: '#10B981' },
-    { label: '总销售额', value: '¥' + formatPrice(overview.totalRevenue || 0), icon: Money, color: '#F59E0B' },
+    { label: '今日订单数', value: overview.totalOrders, icon: ShoppingCart, color: '#15d580' },
+    { label: '今日销售额', value: '¥' + formatPrice(overview.totalRevenue || 0), icon: Money, color: '#F59E0B' },
     { label: '待处理退款', value: overview.pendingRefunds, icon: WarningFilled, color: '#EF4444' }
   ]
 }
